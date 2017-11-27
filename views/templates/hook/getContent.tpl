@@ -1,4 +1,5 @@
-{if isset($confirmation)}  <div class="alert alert-success">Settings updated</div> {/if}
+{if $success eq "no"} <div class="alert alert-danger">Введите числовое значение.</div> {/if}
+{if $confirmation eq 'ok'}  <div class="alert alert-success">Settings updated</div> {/if}
 <fieldset>
     <h2>Ценовой диапaзон</h2>
     <div class="panel">

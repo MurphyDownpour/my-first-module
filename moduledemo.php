@@ -41,18 +41,16 @@
                 . $price_from . ' AND price <=' . $price_to;
             $result = $db->executeS($sql);
             if (!isset($result))
-                die(Tools::displayError($this->name . '. ' . 'Товары не подобраны.'));
+                $this->context->smarty->assign('success', 'no');
             $quantity = 0;
             foreach($result as $row)
             {
                 $quantity++;
             }
             if (!isset($quantity))
-                die(Tools::displayError($this->name . '. ' . 'Товары не найдены.'));
+                $this->context->smarty->assign('search', 'no');
 
-            $this->context->smarty->assign('result', $quantity);
-            $this->context->smarty->assign('price_from', $price_from);
-            $this->context->smarty->assign('price_to', $price_to);
+            $this->context->smarty->assign('result', array('quantity' => $quantity, 'price_from' => $price_from, 'price_to' => $price_to));
 
             return $this->display(__FILE__, 'displayLeftColumn.tpl');
         }
@@ -67,7 +65,8 @@
                     || !Validate::isInt($price_to)
                 )
                 {
-                    die(Tools::displayError($this->name . '. ' . 'Пожалуйста, введите числовое значение.'));
+                    $this->context->smarty->assign('success', 'no');
+                    return $this->display(__FILE__, 'getContent.tpl');
                 }
 
                 $price_from = (float)$price_from;
