@@ -41,14 +41,14 @@
                 . $price_from . ' AND price <=' . $price_to;
             $result = $db->executeS($sql);
             if (!isset($result))
-                die('Ошибка.');
+                die(Tools::displayError($this->name . '. ' . 'Товары не подобраны.'));
             $quantity = 0;
             foreach($result as $row)
             {
-                $quantity += (int)$row['quantity'];
+                $quantity++;
             }
             if (!isset($quantity))
-                die('Ошибка.');
+                die(Tools::displayError($this->name . '. ' . 'Товары не найдены.'));
 
             $this->context->smarty->assign('result', $quantity);
             $this->context->smarty->assign('price_from', $price_from);
@@ -63,7 +63,15 @@
             {
                 $price_from = Tools::getValue('price_from');
                 $price_to = Tools::getValue('price_to');
+                if (!Validate::isInt($price_from)
+                    || !Validate::isInt($price_to)
+                )
+                {
+                    die(Tools::displayError($this->name . '. ' . 'Пожалуйста, введите числовое значение.'));
+                }
 
+                $price_from = (float)$price_from;
+                $price_to = (float)$price_to;
                 Configuration::updateValue('MYMOD_PRICE_FROM', $price_from);
                 Configuration::updateValue('MYMOD_PRICE_TO', $price_to);
                 $this->context->smarty->assign('confirmation', 'ok');
